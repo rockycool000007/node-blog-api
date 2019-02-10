@@ -21,26 +21,32 @@ module.exports = {
       author = req.body.author;
 
       try {
-        client.hmset(
-          id, ["title", title, "content", content, "author", author],
-          (err, reply) => {
-            if (err) {
-              res.send(err)
-            } else {
-              res.send(reply);
-            }
-          }
-        );
+        var reviewPost = JSON.stringify(req.body);
+        client.set(id, reviewPost);
+        // client.hmset(
+        //   id, ["title", title, "content", content, "author", author],
+        //   (err, reply) => {
+        //     if (err) {
+        //       res.send(err)
+        //     } else {
+        //       res.send(reply);
+        //     }
+        //   }
+        // );
       } catch (err) {
         res.send("Error creating review");
       }
   },
 
   /* View All Review */
-  getAllReview: (req, res) => {
-    const id = req.params.reviewid;
+  getAllReview: async (req, res) => {
+    const id = 'rev:*';
     try {
-      client.hgetall(id, (err, reply) => {
+
+      // var reply = await client.get(id);
+      // res.send(reply);
+
+      await client.hgetall(id, (err, reply) => {
         if (err) {
           res.send(err);
         } else {
@@ -53,16 +59,21 @@ module.exports = {
   },
   
   /* View Review Details */
-  getReview: (req, res) => {
+  getReview: async (req, res) => {
     const id = req.params.reviewid;
     try {
-      client.hgetall(id, (err, reply) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(reply);
-        }
-      });
+
+      var reply = await client.get(id);
+      res.send(reply);
+
+      
+      // client.hgetall(id, (err, reply) => {
+      //   if (err) {
+      //     res.send(err);
+      //   } else {
+      //     res.send(reply);
+      //   }
+      // });
     } catch (err) {
       res.send("Error getting review");
     }
