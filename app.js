@@ -17,7 +17,10 @@ const config = require("./configuration/env");
 
 const app = express();
 
+// better security
 app.use(helmet()); 
+
+// better logging
 app.use(morgan("combined"));
 app.use(cors());
 
