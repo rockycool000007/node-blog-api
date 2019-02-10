@@ -18,15 +18,8 @@ blogRoute.get("/health", function(req, res, next) {
 
 
 // Define Route for the App
-// Route to create 
-// blogRoute.post("/review/create", blogController.create);
-// blogRoute.get("/review/:id", blogController.view);
-// blogRoute.put("/review/:id", blogController.update);
-// blogRoute.delete("/review/:id", blogController.delete);
-// blogRoute.create("/review/:id/comment/create", blogController.createComment);
 
-
-blogRoute.post("/test", blogController.test);
+blogRoute.get("/test", blogController.testReview);
 blogRoute.post("/review/createreview", blogController.createReview);
 blogRoute.get("/review/all", blogController.getAllReview);
 blogRoute.get("/review/:id", blogController.getReview);
@@ -36,4 +29,5 @@ blogRoute.post("/review/createComment/:id", blogController.createComment);
 
 
 // Export the module to use blogRoute
+
 module.exports = blogRoute;

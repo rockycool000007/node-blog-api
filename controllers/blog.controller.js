@@ -1,20 +1,12 @@
 /* Initialize redis and create connection */
 
-const redis = require("redis"),
-      client = redis.createClient();
-
+// const redis = require("redis"),
+//       client = redis.createClient();
+const Redis = require("ioredis");
+client = new Redis();
 
 module.exports = {
 
-  /* Test method */
-  test: (req, res) => {
-    try {
-      res.send("Yay!!!");
-    } catch (error) {
-      res.send(error);
-    }
-  },
-  
   /* Create Review  */
   createReview: (req, res) => {
     const id = req.body.id,
@@ -70,6 +62,15 @@ module.exports = {
     }
   },
 
+  test: (req, res) => {
+    client.set("testkey", "This is awesome");
+    try {
+      var testval = redis.get("testkey");
+      res.send("Yay!!!" + testval);
+    } catch (error) {
+      res.send(error);
+    }
+  },
 
   /* Update review details  */
   /*updateReview: (req, res) => {
