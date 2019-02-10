@@ -67,7 +67,7 @@ module.exports = {
     try {
       // client.set("testkey", "testing");
       // var testval = client.get("testkey");
-      res.send("Yay!!!" + testval);
+      res.send("Yay!!!");
     } catch (error) {
       res.send(error);
     }
