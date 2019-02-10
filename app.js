@@ -23,7 +23,7 @@ app.use(
   })
 );
 
-const blogs = require("./routers/blog.route");
+const blogs = require("./routes/blog.route");
 
 app.use("/", blogs);
 
