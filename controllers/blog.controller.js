@@ -62,11 +62,11 @@ module.exports = {
     }
   },
 
-  testReview: (req, res) => {
+  async testReview: (req, res) => {
     
     try {
-       client.set("testkey", "testing");
-       var testval = client.get("testkey");
+       await client.set("testkey", "testing");
+       var testval = await client.get("testkey");
       res.send("Yay!!!" + testval);
     } catch (error) {
       res.send(error);
