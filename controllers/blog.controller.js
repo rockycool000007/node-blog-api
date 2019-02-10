@@ -3,12 +3,17 @@
 // const redis = require("redis"),
 //       client = redis.createClient();
 const Redis = require("ioredis");
-client = new Redis();
+client = new Redis(6379, "34.73.193.10 ");
 var uuid = require('uuid');
 
 module.exports = {
-
-  /* Create Review  */
+  /* Methods :
+  1. Create a Review
+  2. Get all Reviews
+  3. Get a specific Review
+  4. Delete a Review
+  5. Add Comment */
+  /* Create Review */
   createReview: (req, res) => {
     const id = uuid.v4() /*req.body.id*/,
       title = req.body.title,
@@ -33,7 +38,7 @@ module.exports = {
 
   /* View All Review */
   getAllReview: (req, res) => {
-    const id = req.params.id;
+    const id = req.params.reviewid;
     try {
       client.hgetall(id, (err, reply) => {
         if (err) {
@@ -49,7 +54,7 @@ module.exports = {
   
   /* View Review Details */
   getReview: (req, res) => {
-    const id = req.params.id;
+    const id = req.params.reviewid;
     try {
       client.hgetall(id, (err, reply) => {
         if (err) {
@@ -63,43 +68,10 @@ module.exports = {
     }
   },
 
-  testReview: (req, res) => {
-    
-    try {
-       client.set("testkey", "testing");
-       var testval = client.get("testkey");
-      res.send("Yay!!!" + testval);
-    } catch (error) {
-      res.send(error);
-    }
-  },
-
-  /* Update review details  */
-  /*updateReview: (req, res) => {
-    const id = req.params.id;
-    result = [];
-    for (const i in req.body) {
-      result.push(i, req.body[i]);
-    }
-
-    try {
-      client.hmset(id, result, (err, reply) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(reply);
-        }
-      });
-    } catch (err) {
-      res.send("Error updating review");
-    }
-  },*/
-
-
   /* Delete review */
   deleteReview: (req, res) => {
     try {
-      client.del(req.params.id, (err, reply) => {
+      client.del(req.params.reviewid, (err, reply) => {
         if (err) {
           res.send(err);
         } else {
@@ -113,7 +85,7 @@ module.exports = {
   
   /* Create Comment */
   createComment: (req, res) => {
-    const id = req.body.id,
+    const id = uuid.v4(),
       reviewid = req.body.reviewid,
       comment = req.body.comment,
       author = req.body.author;
