@@ -4,12 +4,13 @@
 //       client = redis.createClient();
 const Redis = require("ioredis");
 client = new Redis();
+var uuid = require('uuid');
 
 module.exports = {
 
   /* Create Review  */
   createReview: (req, res) => {
-    const id = req.body.id,
+    const id = uuid.v4() /*req.body.id*/,
       title = req.body.title,
       content = req.body.content,
       author = req.body.author;
