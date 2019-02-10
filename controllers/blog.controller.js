@@ -62,12 +62,12 @@ module.exports = {
     }
   },
 
-  test: (req, res) => {
+  testReview: (req, res) => {
     
     try {
-      // client.set("testkey", "testing");
-      // var testval = client.get("testkey");
-      res.send("Yay!!!");
+       client.set("testkey", "testing");
+       var testval = client.get("testkey");
+      res.send("Yay!!!" + testval);
     } catch (error) {
       res.send(error);
     }
