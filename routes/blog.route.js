@@ -23,7 +23,7 @@ blogRoute.post("/review/createreview", blogController.createReview);
 blogRoute.get("/review/all", blogController.getAllReview);
 blogRoute.get("/review/:reviewid", blogController.getReview);
 blogRoute.get("/review/delete/:reviewid", blogController.deleteReview);
-blogRoute.post("/review/createComment/:reviewid", blogController.createComment);
+blogRoute.post("/review/createComment", blogController.createComment);
 
 
 

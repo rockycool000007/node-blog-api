@@ -15,7 +15,7 @@ module.exports = {
   5. Add Comment */
   /* Create Review */
   createReview: (req, res) => {
-    const id = uuid.v4() /*req.body.id*/,
+    const id = "rev-" + uuid.v4(),
       title = req.body.title,
       content = req.body.content,
       author = req.body.author;
@@ -23,16 +23,6 @@ module.exports = {
       try {
         var reviewPost = JSON.stringify(req.body);
         client.set(id, reviewPost);
-        // client.hmset(
-        //   id, ["title", title, "content", content, "author", author],
-        //   (err, reply) => {
-        //     if (err) {
-        //       res.send(err)
-        //     } else {
-        //       res.send(reply);
-        //     }
-        //   }
-        // );
       } catch (err) {
         res.send("Error creating review");
       }
@@ -40,12 +30,17 @@ module.exports = {
 
   /* View All Review */
   getAllReview: async (req, res) => {
-    const id = 'rev:*';
+    const id = 'rev';
+    
     try {
+
+      getAllKeys(['rev-*'], function(err, arr) {  
+          console.log('Received output from Redis Pipeline/Exec:');
+          console.log(JSON.stringify(arr));
+      });
 
       // var reply = await client.get(id);
       // res.send(reply);
-
       await client.hgetall(id, (err, reply) => {
         if (err) {
           res.send(err);
@@ -62,18 +57,8 @@ module.exports = {
   getReview: async (req, res) => {
     const id = req.params.reviewid;
     try {
-
       var reply = await client.get(id);
       res.send(reply);
-
-      
-      // client.hgetall(id, (err, reply) => {
-      //   if (err) {
-      //     res.send(err);
-      //   } else {
-      //     res.send(reply);
-      //   }
-      // });
     } catch (err) {
       res.send("Error getting review");
     }
@@ -96,24 +81,30 @@ module.exports = {
   
   /* Create Comment */
   createComment: (req, res) => {
-    const id = uuid.v4(),
+    const id = "com-" + uuid.v4(),
       reviewid = req.body.reviewid,
       comment = req.body.comment,
       author = req.body.author;
 
       try {
-        client.hmset(
-          id, ["title", title, "content", content, "author", author],
-          (err, reply) => {
-            if (err) {
-              res.send(err)
-            } else {
-              res.send(reply);
-            }
-          }
-        );
+        client.exists(reviewid).then(review => { review.del(reviewid) });
+        var reviewPost = JSON.stringify(req.body);
+        client.set(reviewid, reviewPost);
       } catch (err) {
         res.send("Error creating comment");
       }
+  },
+
+  getAllKeys: (keys, cb) => {
+      
+      var pipeline = client.pipeline();
+
+      keys.forEach(function(key, index){
+          pipeline.hgetall(key);
+      });
+
+      pipeline.exec(function(err, result){
+          cb(err, result);
+      });
   }
 };
