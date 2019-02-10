@@ -1,18 +1,24 @@
 "use strict";
 const express = require("express"),
   redis = require("redis"),
+  //redis = require("ioredis"),
   bodyParser = require("body-parser"),
-  cors = require("cors");
+  cors = require("cors"),
+  helmet = require('helmet'),
+  morgan = require('morgan');
+ 
+const config = require("./configuration/env");
 
-const config = require("./app_config/env");
-
-const client = redis.createClient();
+const client = redis.createClient("6379", "http://34.73.145.65");
 
 client.on("connect", function() {
   console.log("You are now connected to Redis...");
 });
 
 const app = express();
+
+app.use(helmet()); 
+app.use(morgan("combined"));
 app.use(cors());
 
 app.set("port", config.PORT);

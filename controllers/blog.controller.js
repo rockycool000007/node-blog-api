@@ -16,29 +16,46 @@ module.exports = {
   },
   
   /* Create Review  */
-  create: (req, res) => {
+  createReview: (req, res) => {
     const id = req.body.id,
       title = req.body.title,
-      description = req.body.description;
-    try {
-      client.hmset(
-        id,
-        ["title", title, "description", description],
-        (err, reply) => {
-          if (err) {
-            res.send(err);
-          } else {
-            res.send(reply);
+      content = req.body.content,
+      author = req.body.author;
+
+      try {
+        client.hmset(
+          id, ["title", title, "content", content, "author", author],
+          (err, reply) => {
+            if (err) {
+              res.send(err)
+            } else {
+              res.send(reply);
+            }
           }
-        }
-      );
-    } catch (err) {
-      res.send("Error creaing review");
-    }
+        );
+      } catch (err) {
+        res.send("Error creating review");
+      }
   },
 
+  /* View All Review */
+  getAllReview: (req, res) => {
+    const id = req.params.id;
+    try {
+      client.hgetall(id, (err, reply) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(reply);
+        }
+      });
+    } catch (err) {
+      res.send("Error getting review");
+    }
+  },
+  
   /* View Review Details */
-  view: (req, res) => {
+  getReview: (req, res) => {
     const id = req.params.id;
     try {
       client.hgetall(id, (err, reply) => {
@@ -55,7 +72,7 @@ module.exports = {
 
 
   /* Update review details  */
-  update: (req, res) => {
+  /*updateReview: (req, res) => {
     const id = req.params.id;
     result = [];
     for (const i in req.body) {
@@ -73,11 +90,11 @@ module.exports = {
     } catch (err) {
       res.send("Error updating review");
     }
-  },
+  },*/
 
 
   /* Delete review */
-  delete: (req, res) => {
+  deleteReview: (req, res) => {
     try {
       client.del(req.params.id, (err, reply) => {
         if (err) {
@@ -89,5 +106,28 @@ module.exports = {
     } catch (err) {
       res.send("Error deleting review");
     }
+  },
+  
+  /* Create Comment */
+  createComment: (req, res) => {
+    const id = req.body.id,
+      reviewid = req.body.reviewid,
+      comment = req.body.comment,
+      author = req.body.author;
+
+      try {
+        client.hmset(
+          id, ["title", title, "content", content, "author", author],
+          (err, reply) => {
+            if (err) {
+              res.send(err)
+            } else {
+              res.send(reply);
+            }
+          }
+        );
+      } catch (err) {
+        res.send("Error creating comment");
+      }
   }
 };
