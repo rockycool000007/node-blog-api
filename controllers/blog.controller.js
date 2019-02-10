@@ -63,9 +63,10 @@ module.exports = {
   },
 
   test: (req, res) => {
-    client.set("testkey", "This is awesome");
+    
     try {
-      var testval = redis.get("testkey");
+      client.set("testkey", "testing");
+      var testval = client.get("testkey");
       res.send("Yay!!!" + testval);
     } catch (error) {
       res.send(error);
