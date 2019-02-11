@@ -3,7 +3,7 @@
 // const redis = require("redis"),
 //       client = redis.createClient();
 const Redis = require("ioredis");
-client = new Redis(6379, "34.73.193.10 ");
+client = new Redis(6379, "34.73.193.10");
 var uuid = require('uuid');
 
 module.exports = {
@@ -23,6 +23,7 @@ module.exports = {
       try {
         var reviewPost = JSON.stringify(req.body);
         client.set(id, reviewPost);
+        res.send("Review created Successfully");
       } catch (err) {
         res.send("Error creating review");
       }
@@ -30,23 +31,30 @@ module.exports = {
 
   /* View All Review */
   getAllReview: async (req, res) => {
-    const id = 'rev';
-    
     try {
+      var obj = [];
+      client.keys('rev-*').then(function (keys) {
+        // Use pipeline instead of sending one command each time to improve the performance.
+        var pipeline = client.pipeline();
+        
+        keys.forEach(async (key) => {
+          //pipeline.del(key);
+          // var reply = await client.get(key);
+          //var reply = await pipeline.get(key);
 
-      getAllKeys(['rev-*'], function(err, arr) {  
-          console.log('Received output from Redis Pipeline/Exec:');
-          console.log(JSON.stringify(arr));
-      });
+          var promise = client.pipeline().get(key).exec();
+          promise.then(async (result) => {
+            //var test = result;
+            await obj.push(result);
+            return res.send(obj);
+            ////res.send(result);
+          });
 
-      // var reply = await client.get(id);
-      // res.send(reply);
-      await client.hgetall(id, (err, reply) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.send(reply);
-        }
+          // await obj.push(reply);
+          // await res.send(obj);
+        });
+        
+        return pipeline.exec();
       });
     } catch (err) {
       res.send("Error getting review");
@@ -90,21 +98,9 @@ module.exports = {
         client.exists(reviewid).then(review => { review.del(reviewid) });
         var reviewPost = JSON.stringify(req.body);
         client.set(reviewid, reviewPost);
+        res.send("Comment added Successfully");
       } catch (err) {
         res.send("Error creating comment");
       }
-  },
-
-  getAllKeys: (keys, cb) => {
-      
-      var pipeline = client.pipeline();
-
-      keys.forEach(function(key, index){
-          pipeline.hgetall(key);
-      });
-
-      pipeline.exec(function(err, result){
-          cb(err, result);
-      });
   }
 };
