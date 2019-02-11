@@ -77,18 +77,21 @@ module.exports = {
   createComment: (req, res) => {
       try {
         const reviewId = req.body.id;
-        client.exists(reviewId).then(review => { client.del(reviewId) });
-        var reviewPost = JSON.stringify({ 
-          "id": ("com-" + uuid.v4()), 
-          "text": req.body.text,
-          "name": req.body.name,
-          "reviewid": reviewId,
-          "title": req.body.title, 
-          "content": req.body.content, 
-          "author": req.body.author });
+        client.exists(reviewId).then(() => { 
+          client.del(reviewId) 
         
-        client.set(reviewId, reviewPost);
-        res.send("Comment added Successfully");
+          var reviewPost = JSON.stringify({ 
+            "id": ("com-" + uuid.v4()), 
+            "text": req.body.text,
+            "name": req.body.name,
+            "reviewid": reviewId,
+            "title": req.body.title, 
+            "content": req.body.content, 
+            "author": req.body.author });
+          
+          client.set(reviewId, reviewPost);
+          res.send("Comment added Successfully");
+        });
       } catch (err) {
         res.send("Error creating comment");
       }
