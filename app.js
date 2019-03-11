@@ -5,7 +5,7 @@ const express = require("express"),
   cors = require("cors"),
   helmet = require("helmet"),
   morgan = require("morgan");
- 
+
 const config = require("./configuration/env");
 
 const app = express();
