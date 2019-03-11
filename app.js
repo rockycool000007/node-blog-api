@@ -3,8 +3,8 @@ const express = require("express"),
   redis = require("ioredis"),
   bodyParser = require("body-parser"),
   cors = require("cors"),
-  helmet = require('helmet'),
-  morgan = require('morgan');
+  helmet = require("helmet"),
+  morgan = require("morgan");
  
 const config = require("./configuration/env");
 
