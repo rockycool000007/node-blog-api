@@ -16,7 +16,6 @@ app.use(helmet());
 /* Better logging of the blog app */
 app.use(morgan("combined"));
 app.use(cors());
-
 app.set("port", config.PORT);
 app.use(bodyParser.json());
 app.use(
